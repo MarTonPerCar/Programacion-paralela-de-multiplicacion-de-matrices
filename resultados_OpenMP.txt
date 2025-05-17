@@ -1,0 +1,137 @@
+>>> Ejecución OpenMP - Modo normal <<<
+Caso 0 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 3x3
+Instrucciones promedio: 1649373
+Ciclos promedio: 4744996
+Tiempo promedio: 0.001668 segundos
+Valor acumulado C: 90
+
+Caso 1 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 10x10
+Instrucciones promedio: 1200465
+Ciclos promedio: 3352937
+Tiempo promedio: 0.001646 segundos
+Valor acumulado C: 72750
+
+Caso 2 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 100x100
+Instrucciones promedio: 7423244
+Ciclos promedio: 6521196
+Tiempo promedio: 0.002683 segundos
+Valor acumulado C: 8967750000
+
+Caso 3 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 250x250
+Instrucciones promedio: 97465654
+Ciclos promedio: 55048326
+Tiempo promedio: 0.018234 segundos
+Valor acumulado C: 887386718750
+
+Caso 4 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 500x500
+Instrucciones promedio: 768438889
+Ciclos promedio: 499246081
+Tiempo promedio: 0.152694 segundos
+Valor acumulado C: 28520968750000
+
+Caso 5 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 1000x1000
+Instrucciones promedio: 6129778312
+Ciclos promedio: 7293248096
+Tiempo promedio: 2.045938 segundos
+Valor acumulado C: 914667750000000
+
+Caso 6 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 1500x1500
+Instrucciones promedio: 20681641524
+Ciclos promedio: 24404236300
+Tiempo promedio: 7.075283 segundos
+Valor acumulado C: 6950816156250000
+
+Caso 7 - Ejecución normal (0)
+=== RESULTADOS ===
+Tamaño de matriz: 2000x2000
+Instrucciones promedio: 49013580448
+Ciclos promedio: 61489569554
+Tiempo promedio: 18.607758 segundos
+Valor acumulado C: 29301342000000000
+
+>>> Ejecución OpenMP - Modo múltiple (100 repeticiones) <<<
+Caso 0 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 3x3
+Instrucciones promedio: 19113
+Ciclos promedio: 51521
+Tiempo promedio: 0.000034 segundos
+Tiempo total: 0.003391 segundos
+Valor acumulado C: 90
+
+Caso 1 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 10x10
+Instrucciones promedio: 24692
+Ciclos promedio: 56991
+Tiempo promedio: 0.000039 segundos
+Tiempo total: 0.003877 segundos
+Valor acumulado C: 72750
+
+Caso 2 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 100x100
+Instrucciones promedio: 6212368
+Ciclos promedio: 3328949
+Tiempo promedio: 0.001181 segundos
+Tiempo total: 0.118077 segundos
+Valor acumulado C: 8967750000
+
+Caso 3 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 250x250
+Instrucciones promedio: 96605735
+Ciclos promedio: 54787090
+Tiempo promedio: 0.018416 segundos
+Tiempo total: 1.841624 segundos
+Valor acumulado C: 887386718750
+
+Caso 4 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 500x500
+Instrucciones promedio: 768479792
+Ciclos promedio: 504743007
+Tiempo promedio: 0.167281 segundos
+Tiempo total: 16.728148 segundos
+Valor acumulado C: 28520968750000
+
+Caso 5 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 1000x1000
+Instrucciones promedio: 6129727778
+Ciclos promedio: 6101791385
+Tiempo promedio: 1.956893 segundos
+Tiempo total: 195.689287 segundos
+Valor acumulado C: 914667750000000
+
+Caso 6 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 1500x1500
+Instrucciones promedio: 20679667329
+Ciclos promedio: 23562977808
+Tiempo promedio: 7.591316 segundos
+Tiempo total: 759.131617 segundos
+Valor acumulado C: 6950816156250000
+
+Caso 7 - Ejecución múltiple (1), repeticiones = 100
+=== RESULTADOS ===
+Tamaño de matriz: 2000x2000
+Instrucciones promedio: 49012804873
+Ciclos promedio: 58612457974
+Tiempo promedio: 18.965818 segundos
+Tiempo total: 1896.581808 segundos
+Valor acumulado C: 29301342000000000
