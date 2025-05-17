@@ -4,13 +4,13 @@
 #include <string.h>
 #include <omp.h>
 
-// Estructura para los resultados
+// Estructura que almacena los resultados del experimento
 typedef struct {
-    long long instrucciones;
-    long long ciclos;
-    double tiempo;
-    double tiempo_total;
-    long long C;
+    long long instrucciones;   // Número total de instrucciones ejecutadas
+    long long ciclos;          // Número total de ciclos de CPU
+    double tiempo;             // Tiempo promedio por ejecución
+    double tiempo_total;       // Tiempo total (en caso de múltiples repeticiones)
+    long long C;               // Suma de todos los elementos de la matriz resultante
 } Resultados;
 
 // Simulación de una sola ejecución con OpenMP
@@ -48,7 +48,7 @@ Resultados simularMultiplicacionMatricesOpenMP(int N) {
     PAPI_start(eventSet);
 
     // Multiplicación con OpenMP
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(3)
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             for (int k = 0; k < N; k++) {

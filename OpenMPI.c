@@ -4,13 +4,13 @@
 #include <mpi.h>
 #include <papi.h>
 
-// Estructura para los resultados
+// Estructura que almacena los resultados del experimento
 typedef struct {
-    long long instrucciones;
-    long long ciclos;
-    double tiempo;
-    double tiempo_total;
-    long long C;
+    long long instrucciones;   // Número total de instrucciones ejecutadas
+    long long ciclos;          // Número total de ciclos de CPU
+    double tiempo;             // Tiempo promedio por ejecución
+    double tiempo_total;       // Tiempo total (en caso de múltiples repeticiones)
+    long long C;               // Suma de todos los elementos de la matriz resultante
 } Resultados;
 
 Resultados simularMultiplicacionMatricesMPI(int N) {
@@ -23,12 +23,15 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    // División de filas entre procesos
     int filas_local = N / size;
     int resto = N % size;
     if (rank < resto) filas_local++;
 
+    // Desplazamiento para Scatterv
     int offset = (N / size) * rank + (rank < resto ? rank : resto);
 
+    // Reservar memoria local
     int* A_local = malloc(filas_local * N * sizeof(int));
     int* B = malloc(N * N * sizeof(int));
     long long* C_local = calloc(filas_local * N, sizeof(long long));
@@ -38,6 +41,7 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
+    // Inicializar A y B
     int* A_full = NULL;
     if (rank == 0) {
         A_full = malloc(N * N * sizeof(int));
@@ -49,8 +53,9 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
         }
     }
 
-    MPI_Bcast(B, N * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(B, N * N, MPI_INT, 0, MPI_COMM_WORLD); // Enviar B a todos
 
+    // Preparar Scatterv
     int* sendcounts = malloc(size * sizeof(int));
     int* displs = malloc(size * sizeof(int));
     int sum = 0;
@@ -61,9 +66,9 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
     }
 
     MPI_Scatterv(A_full, sendcounts, displs, MPI_INT, A_local, sendcounts[rank], MPI_INT, 0, MPI_COMM_WORLD);
-
     if (rank == 0) free(A_full);
 
+    // Configurar PAPI
     PAPI_library_init(PAPI_VER_CURRENT);
     PAPI_create_eventset(&eventSet);
     PAPI_add_event(eventSet, PAPI_TOT_INS);
@@ -73,6 +78,7 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
     PAPI_reset(eventSet);
     PAPI_start(eventSet);
 
+    // Multiplicación de matrices
     for (int i = 0; i < filas_local; i++) {
         for (int j = 0; j < N; j++) {
             for (int k = 0; k < N; k++) {
@@ -81,6 +87,7 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
         }
     }
 
+    // Sumar todos los valores de C
     long long suma_local = 0;
     for (int i = 0; i < filas_local * N; i++) {
         suma_local += C_local[i];
@@ -92,6 +99,7 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
     long long suma_total = 0;
     MPI_Reduce(&suma_local, &suma_total, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
+    // Solo el proceso 0 guarda resultados
     if (rank == 0) {
         resultado.C = suma_total;
         resultado.instrucciones = valores[0];
@@ -100,6 +108,7 @@ Resultados simularMultiplicacionMatricesMPI(int N) {
         resultado.tiempo_total = resultado.tiempo;
     }
 
+    // Liberar memoria y cerrar PAPI
     free(A_local);
     free(B);
     free(C_local);
@@ -122,10 +131,12 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+	// División de filas entre procesos
     int filas_local = N / size;
     int resto = N % size;
     if (rank < resto) filas_local++;
 
+	// Reservar memoria local
     int* A_local = malloc(filas_local * N * sizeof(int));
     int* B = malloc(N * N * sizeof(int));
     long long* C_local = malloc(filas_local * N * sizeof(long long));
@@ -135,6 +146,7 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
+	// Inicializar A y B
     int* A_full = NULL;
     if (rank == 0) {
         A_full = malloc(N * N * sizeof(int));
@@ -148,6 +160,7 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
 
     MPI_Bcast(B, N * N, MPI_INT, 0, MPI_COMM_WORLD);
 
+	// Preparar Scatterv
     int* sendcounts = malloc(size * sizeof(int));
     int* displs = malloc(size * sizeof(int));
     int sum = 0;
@@ -161,6 +174,7 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
 
     if (rank == 0) free(A_full);
 
+	// Configurar PAPI
     PAPI_library_init(PAPI_VER_CURRENT);
     PAPI_create_eventset(&eventSet);
     PAPI_add_event(eventSet, PAPI_TOT_INS);
@@ -170,6 +184,7 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
     double totalTiempo = 0.0;
     long long C_acumulado = 0;
 
+	// Inicio de repetición del proceso
     for (int r = 0; r < repeticiones; r++) {
         memset(C_local, 0, filas_local * N * sizeof(long long));
 
@@ -177,6 +192,7 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
         PAPI_reset(eventSet);
         PAPI_start(eventSet);
 
+		// Multiplicación real
         for (int i = 0; i < filas_local; i++) {
             for (int j = 0; j < N; j++) {
                 for (int k = 0; k < N; k++) {
@@ -184,7 +200,8 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
                 }
             }
         }
-
+		
+		// Sumar todos los valores de C
         long long suma_local = 0;
         for (int i = 0; i < filas_local * N; i++) {
             suma_local += C_local[i];
@@ -224,6 +241,8 @@ Resultados simularMultiplicacionConRepeticionesMPI(int N, int repeticiones) {
     return resultado;
 }
 
+// El main en este caso actua de forma que recibe el codigo, esto ocurre porque OpenMPI ejecuta de manera simultanea todos los hilos, 
+// lo cual complica el uso de un scanf para ello, por ende se cambia a una filosofía de recogida de datos
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
 

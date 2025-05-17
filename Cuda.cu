@@ -2,21 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cuda_runtime.h>
-#include <papi.h>
+#include <papi.h>        
 
-// Estructura para los resultados
+// Estructura que almacena los resultados del experimento
 typedef struct {
-    long long instrucciones;
-    long long ciclos;
-    double tiempo;
-    double tiempo_total;
-    long long C;
+    long long instrucciones;   // Número total de instrucciones ejecutadas
+    long long ciclos;          // Número total de ciclos de CPU
+    double tiempo;             // Tiempo promedio por ejecución
+    double tiempo_total;       // Tiempo total (en caso de múltiples repeticiones)
+    long long C;               // Suma de todos los elementos de la matriz resultante
 } Resultados;
 
+// Kernel de CUDA: cada hilo calculará un elemento de la matriz resultante C
 __global__ void multiplicarKernel(int* A, int* B, long long* C, int N) {
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    int row = blockIdx.y * blockDim.y + threadIdx.y;  // Índice global de fila
+    int col = blockIdx.x * blockDim.x + threadIdx.x;  // Índice global de columna
 
+    // Solo si está dentro de los límites de la matriz
     if (row < N && col < N) {
         long long sum = 0;
         for (int k = 0; k < N; ++k) {
@@ -30,32 +32,40 @@ void calcularEnCUDA(int* A, int* B, long long* C, int N) {
     int *d_A, *d_B;
     long long *d_C;
 
+    // Reservar memoria en la GPU para A, B y C
     cudaMalloc((void**)&d_A, N * N * sizeof(int));
     cudaMalloc((void**)&d_B, N * N * sizeof(int));
     cudaMalloc((void**)&d_C, N * N * sizeof(long long));
 
+    // Copiar matrices A y B desde la CPU a la GPU
     cudaMemcpy(d_A, A, N * N * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, B, N * N * sizeof(int), cudaMemcpyHostToDevice);
 
+    // Definición del tamaño de bloque e invocación del grid
     dim3 blockDim(16, 16);
     dim3 gridDim((N + 15) / 16, (N + 15) / 16);
 
+    // Lanzar el kernel CUDA
     multiplicarKernel<<<gridDim, blockDim>>>(d_A, d_B, d_C, N);
-    cudaDeviceSynchronize();
+    cudaDeviceSynchronize();  // Esperar a que todos los hilos terminen
 
+    // Copiar el resultado desde la GPU a la CPU
     cudaMemcpy(C, d_C, N * N * sizeof(long long), cudaMemcpyDeviceToHost);
 
+    // Liberar la memoria de la GPU
     cudaFree(d_A);
     cudaFree(d_B);
     cudaFree(d_C);
 }
 
+// Función que realiza una única multiplicación de matrices usando CUDA
 Resultados simularMultiplicacionMatrices(int N) {
     Resultados resultado;
     int eventSet = PAPI_NULL;
     long long valores[2];
     resultado.C = 0;
 
+    // Reservar de memoria 
     int* A = (int*)malloc(N * N * sizeof(int));
     int* B = (int*)malloc(N * N * sizeof(int));
     long long* C = (long long*)malloc(N * N * sizeof(long long));
@@ -65,6 +75,7 @@ Resultados simularMultiplicacionMatrices(int N) {
         exit(1);
     }
 
+    // Inicializar matrices A y B
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             A[i * N + j] = i + j;
@@ -73,17 +84,20 @@ Resultados simularMultiplicacionMatrices(int N) {
         }
     }
 
+    // Configurar PAPI
     PAPI_library_init(PAPI_VER_CURRENT);
     PAPI_create_eventset(&eventSet);
-    PAPI_add_event(eventSet, PAPI_TOT_INS);
-    PAPI_add_event(eventSet, PAPI_TOT_CYC);
+    PAPI_add_event(eventSet, PAPI_TOT_INS);   // Medir instrucciones
+    PAPI_add_event(eventSet, PAPI_TOT_CYC);   // Medir ciclos
 
     long long start_time = PAPI_get_real_usec();
     PAPI_reset(eventSet);
     PAPI_start(eventSet);
 
+    // // Multiplicación real en la GPU
     calcularEnCUDA(A, B, C, N);
 
+    // Sumar todos los valores de C
     for (int i = 0; i < N * N; i++) {
         resultado.C += C[i];
     }
@@ -96,10 +110,12 @@ Resultados simularMultiplicacionMatrices(int N) {
     resultado.tiempo = (end_time - start_time) / 1e6;
     resultado.tiempo_total = resultado.tiempo;
 
+    // Liberar memoria de CPU
     free(A);
     free(B);
     free(C);
 
+    // Finalizar PAPI
     PAPI_cleanup_eventset(eventSet);
     PAPI_destroy_eventset(&eventSet);
     PAPI_shutdown();
@@ -116,6 +132,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
     long long totalCiclos = 0;
     double totalTiempo = 0.0;
 
+    // Reservar memoria en la CPU
     int* A = (int*)malloc(N * N * sizeof(int));
     int* B = (int*)malloc(N * N * sizeof(int));
     long long* C = (long long*)malloc(N * N * sizeof(long long));
@@ -125,6 +142,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
         exit(1);
     }
 
+    // Inicializar matrices A y B
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             A[i * N + j] = i + j;
@@ -132,19 +150,21 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
         }
     }
 
+    // Configurar PAPI
     PAPI_library_init(PAPI_VER_CURRENT);
     PAPI_create_eventset(&eventSet);
     PAPI_add_event(eventSet, PAPI_TOT_INS);
     PAPI_add_event(eventSet, PAPI_TOT_CYC);
 
+    // Repetir el cálculo tantas veces como se indique
     for (int r = 0; r < repeticiones; r++) {
-        memset(C, 0, N * N * sizeof(long long));
+        memset(C, 0, N * N * sizeof(long long));  // Reiniciar C
 
         long long start_time = PAPI_get_real_usec();
         PAPI_reset(eventSet);
         PAPI_start(eventSet);
 
-        calcularEnCUDA(A, B, C, N);
+        calcularEnCUDA(A, B, C, N);  // Ejecutar cálculo en CUDA
 
         long long sumaC = 0;
         for (int i = 0; i < N * N; i++) {
@@ -157,13 +177,15 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
         totalInstrucciones += valores[0];
         totalCiclos += valores[1];
         totalTiempo += (end_time - start_time) / 1e6;
-        C_total = sumaC;
+        C_total = sumaC;  // Última suma válida
 
+        // Imprimir progreso (cada 10% del total)
         if (repeticiones >= 10 && r % (repeticiones / 10) == 0) {
             printf("Iteración %d de %d (%.0f%%)\n", r + 1, repeticiones, (100.0 * (r + 1)) / repeticiones);
         }
     }
 
+    // Liberar memoria
     free(A);
     free(B);
     free(C);
@@ -172,6 +194,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
     PAPI_destroy_eventset(&eventSet);
     PAPI_shutdown();
 
+    // Calcular promedios y retornar
     resultado.instrucciones = totalInstrucciones / repeticiones;
     resultado.ciclos = totalCiclos / repeticiones;
     resultado.tiempo = totalTiempo / repeticiones;
@@ -181,6 +204,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
     return resultado;
 }
 
+// Función principal
 int main() {
     int caso_matriz, tipo_ejecucion, extra = 0;
 
@@ -191,6 +215,7 @@ int main() {
     printf("  7 - Matriz 2,000x2,000\n");
     printf("Ingresa tu opción: ");
     scanf("%d", &caso_matriz);
+
     if (caso_matriz < 0 || caso_matriz > 7) {
         printf("Error: caso de matriz inválido.\n");
         return 1;

@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <papi.h>
-#include <string.h>  // Para memset
+#include <string.h> 
 
-// Estructura para los resultados
+// Estructura que almacena los resultados del experimento
 typedef struct {
-    long long instrucciones;
-    long long ciclos;
-    double tiempo;
-    double tiempo_total;       // NUEVO: Solo se usa en repeticiones múltiples
-    long long C;
+    long long instrucciones;   // Número total de instrucciones ejecutadas
+    long long ciclos;          // Número total de ciclos de CPU
+    double tiempo;             // Tiempo promedio por ejecución
+    double tiempo_total;       // Tiempo total (en caso de múltiples repeticiones)
+    long long C;               // Suma de todos los elementos de la matriz resultante
 } Resultados;
 
 // Simulación de una sola ejecución
@@ -23,22 +23,22 @@ Resultados simularMultiplicacionMatrices(int N) {
     int* A = malloc(N * N * sizeof(int));
     int* B = malloc(N * N * sizeof(int));
     long long* C = malloc(N * N * sizeof(long long));
-
-    if (!A || !B || !C) {
-        fprintf(stderr, "Error al reservar memoria para las matrices\n");
+	
+	if (!A || !B || !C) {
+        fprintf(stderr, "Error al reservar memoria\n");
         exit(1);
     }
 
     // Inicialización de A y B
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            A[i * N + j] = i + j;                 // valores crecientes
-            B[i * N + j] = 2 * N - 2 - i - j;     // valores decrecientes
+            A[i * N + j] = i + j;                
+            B[i * N + j] = 2 * N - 2 - i - j;     
             C[i * N + j] = 0;
         }
     }
 
-    // Iniciar PAPI
+    // PAPI
     PAPI_library_init(PAPI_VER_CURRENT);
     PAPI_create_eventset(&eventSet);
     PAPI_add_event(eventSet, PAPI_TOT_INS);
@@ -102,7 +102,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
         fprintf(stderr, "Error al reservar memoria\n");
         exit(1);
     }
-
+	
     // Inicializar A y B
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -117,6 +117,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
     PAPI_add_event(eventSet, PAPI_TOT_INS);
     PAPI_add_event(eventSet, PAPI_TOT_CYC);
 
+	// Inicio de repetición del proceso
     for (int r = 0; r < repeticiones; r++) {
         if (repeticiones >= 10 && r % (repeticiones / 10) == 0) {
             printf("Iteración %d de %d (%.0f%%)\n", r + 1, repeticiones, (100.0 * (r + 1)) / repeticiones);
@@ -173,7 +174,7 @@ Resultados simularMultiplicacionConRepeticiones(int N, int repeticiones) {
 }
 
 int main() {
-    int caso_matriz, tipo_ejecucion, extra = 0;
+    int caso_matriz, tipo_ejecucion, repeticiones = 0;
 
     printf("Selecciona el caso de matriz (0 a 7):\n");
     printf("  0 - Matriz 3x3\n  1 - Matriz 10x10\n  2 - Matriz 100x100\n");
@@ -197,9 +198,9 @@ int main() {
     }
 
     if (tipo_ejecucion == 1) {
-        printf("Ingresa un número extra para ejecución múltiple: ");
-        scanf("%d", &extra);
-        if (extra <= 0) {
+        printf("Ingresa un número repeticiones para ejecución múltiple: ");
+        scanf("%d", &repeticiones);
+        if (repeticiones <= 0) {
             printf("Error: número de repeticiones inválido.\n");
             return 1;
         }
@@ -212,7 +213,7 @@ int main() {
     if (tipo_ejecucion == 0) {
         res = simularMultiplicacionMatrices(n);
     } else {
-        res = simularMultiplicacionConRepeticiones(n, extra);
+        res = simularMultiplicacionConRepeticiones(n, repeticiones);
     }
 
     printf("\n=== RESULTADOS ===\n");
