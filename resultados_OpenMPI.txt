@@ -3,135 +3,135 @@ Caso 0 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 3x3
 Instrucciones promedio: 744
-Ciclos promedio: 3380
-Tiempo promedio: 0.000022 segundos
+Ciclos promedio: 2620
+Tiempo promedio: 0.000020 segundos
 Valor acumulado C: 90
 
 Caso 1 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 10x10
 Instrucciones promedio: 15351
-Ciclos promedio: 7255
-Tiempo promedio: 0.000026 segundos
+Ciclos promedio: 7131
+Tiempo promedio: 0.000019 segundos
 Valor acumulado C: 72750
 
 Caso 2 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 100x100
 Instrucciones promedio: 12057959
-Ciclos promedio: 6254728
-Tiempo promedio: 0.001639 segundos
+Ciclos promedio: 5312248
+Tiempo promedio: 0.001369 segundos
 Valor acumulado C: 8967750000
 
 Caso 3 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 250x250
-Instrucciones promedio: 189363077
-Ciclos promedio: 54832633
-Tiempo promedio: 0.016022 segundos
+Instrucciones promedio: 189363085
+Ciclos promedio: 54264161
+Tiempo promedio: 0.014854 segundos
 Valor acumulado C: 887386718750
 
 Caso 4 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 500x500
-Instrucciones promedio: 1501439122
-Ciclos promedio: 600950831
-Tiempo promedio: 0.182438 segundos
+Instrucciones promedio: 1501439176
+Ciclos promedio: 643402450
+Tiempo promedio: 0.183057 segundos
 Valor acumulado C: 28520968750000
 
 Caso 5 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 1000x1000
-Instrucciones promedio: 12005753693
-Ciclos promedio: 7934641617
-Tiempo promedio: 2.326144 segundos
+Instrucciones promedio: 12005754362
+Ciclos promedio: 7851993642
+Tiempo promedio: 2.159414 segundos
 Valor acumulado C: 914667750000000
 
 Caso 6 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 1500x1500
-Instrucciones promedio: 40512944456
-Ciclos promedio: 33951382249
-Tiempo promedio: 10.067445 segundos
+Instrucciones promedio: 40512946116
+Ciclos promedio: 30239686233
+Tiempo promedio: 8.376972 segundos
 Valor acumulado C: 6950816156250000
 
 Caso 7 - Ejecución normal (0)
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 2000x2000
-Instrucciones promedio: 96023010987
-Ciclos promedio: 83156833784
-Tiempo promedio: 24.865265 segundos
+Instrucciones promedio: 96023016201
+Ciclos promedio: 79803490702
+Tiempo promedio: 25.812405 segundos
 Valor acumulado C: 29301342000000000
 
 >>> Ejecución OpenMPI - Modo múltiple (100 repeticiones) <<<
 Caso 0 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 3x3
-Instrucciones promedio: 738
-Ciclos promedio: 690
-Tiempo promedio: 0.000013 segundos
-Tiempo total: 0.001257 segundos
-Valor acumulado C: 12
+Instrucciones promedio: 744
+Ciclos promedio: 784
+Tiempo promedio: 0.000014 segundos
+Tiempo total: 0.001374 segundos
+Valor acumulado C: 90
 
 Caso 1 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 10x10
-Instrucciones promedio: 15291
-Ciclos promedio: 8818
-Tiempo promedio: 0.000019 segundos
-Tiempo total: 0.001878 segundos
-Valor acumulado C: 12375
+Instrucciones promedio: 15351
+Ciclos promedio: 5013
+Tiempo promedio: 0.000013 segundos
+Tiempo total: 0.001277 segundos
+Valor acumulado C: 72750
 
 Caso 2 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 100x100
-Instrucciones promedio: 12052959
-Ciclos promedio: 4308832
-Tiempo promedio: 0.001486 segundos
-Tiempo total: 0.148581 segundos
-Valor acumulado C: 1313812500
+Instrucciones promedio: 12057959
+Ciclos promedio: 3918710
+Tiempo promedio: 0.001309 segundos
+Tiempo total: 0.130870 segundos
+Valor acumulado C: 8967750000
 
 Caso 3 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 250x250
-Instrucciones promedio: 189331555
-Ciclos promedio: 72161747
-Tiempo promedio: 0.024112 segundos
-Tiempo total: 2.411158 segundos
-Valor acumulado C: 131950546875
+Instrucciones promedio: 189363059
+Ciclos promedio: 68154087
+Tiempo promedio: 0.021846 segundos
+Tiempo total: 2.184612 segundos
+Valor acumulado C: 887386718750
 
 Caso 4 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 500x500
-Instrucciones promedio: 1501313896
-Ciclos promedio: 688114594
-Tiempo promedio: 0.223813 segundos
-Tiempo total: 22.381319 segundos
-Valor acumulado C: 4206414062500
+Instrucciones promedio: 1501438939
+Ciclos promedio: 647703985
+Tiempo promedio: 0.231343 segundos
+Tiempo total: 23.134347 segundos
+Valor acumulado C: 28520968750000
 
 Caso 5 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 1000x1000
-Instrucciones promedio: 12005252897
-Ciclos promedio: 8017469996
-Tiempo promedio: 2.501520 segundos
-Tiempo total: 250.152015 segundos
-Valor acumulado C: 135010687500000
+Instrucciones promedio: 12005753405
+Ciclos promedio: 7695992046
+Tiempo promedio: 2.535462 segundos
+Tiempo total: 253.546167 segundos
+Valor acumulado C: 914667750000000
 
 Caso 6 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 1500x1500
-Instrucciones promedio: 40511817832
-Ciclos promedio: 32606085932
-Tiempo promedio: 10.391382 segundos
-Tiempo total: 1039.138152 segundos
-Valor acumulado C: 1026264585937500
+Instrucciones promedio: 40512944768
+Ciclos promedio: 30974223691
+Tiempo promedio: 10.105094 segundos
+Tiempo total: 1010.509371 segundos
+Valor acumulado C: 6950816156250000
 
 Caso 7 - Ejecución múltiple (1), repeticiones = 100
 === RESULTADOS (MPI) ===
 Tamaño de matriz: 2000x2000
-Instrucciones promedio: 96021009180
-Ciclos promedio: 83232678344
-Tiempo promedio: 27.120072 segundos
-Tiempo total: 2712.007223 segundos
-Valor acumulado C: 4326835500000000
+Instrucciones promedio: 96023013218
+Ciclos promedio: 74692168398
+Tiempo promedio: 23.399186 segundos
+Tiempo total: 2339.918577 segundos
+Valor acumulado C: 29301342000000000
