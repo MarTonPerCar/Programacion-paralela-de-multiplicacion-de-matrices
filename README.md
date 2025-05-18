@@ -19,7 +19,7 @@ Este proyecto evalúa el rendimiento de la multiplicación de matrices cuadradas
 ├── resultado_CUDA.txt
 ├── resultado_OpenMPI.txt
 
-├── ejecucion.mp4             # Video demostrando cómo se ejecutan los cuatro códigos
+├── ejecucion.mkv             # Video demostrando cómo se ejecutan los cuatro códigos
 ├── resultados.xlsx           # Archivo Excel con todos los datos estructurados y graficados
 
 ├── memoria.pdf               # Informe completo del proyecto
